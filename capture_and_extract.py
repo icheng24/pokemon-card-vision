@@ -5,36 +5,37 @@ import pytesseract
 from PIL import Image
 import json
 
-# make a timestamp so our files don't overwrite each other
-timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-photo_file = f"photo_{timestamp}.jpg"
-json_file = f"card_text_{timestamp}.json"
+# set up the cameras
+for cam_num in [0, 1]:
+    # create timestamp for each photo
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    photo_file = f"photo_cam{cam_num}_{timestamp}.jpg"
+    json_file = f"card_text_cam{cam_num}_{timestamp}.json"
+    
+    # set up the camera
+    picam2 = Picamera2(camera_num=cam_num)
+    config = picam2.create_still_configuration()
+    picam2.configure(config)
 
-# set up the camera
-picam2 = Picamera2()
-config = picam2.create_still_configuration()
-picam2.configure(config)
+    # start camera and wait to focus
+    picam2.start()
+    time.sleep(2)
 
-# start the camera and give it a second to focus
-picam2.start()
-time.sleep(2)
+    # capture image
+    picam2.capture_file(photo_file)
+    picam2.stop()
+    print(f"[{timestamp}] camera {cam_num} photo saved as {photo_file}")
 
-# take the picture and save it
-picam2.capture_file(photo_file)
-picam2.stop()
-print(f"[{timestamp}] photo saved as {photo_file}")
+    # read text from image
+    img = Image.open(photo_file)
+    text = pytesseract.image_to_string(img)
 
-# open the photo and read any text in it
-img = Image.open(photo_file)
-text = pytesseract.image_to_string(img) #must use pytesseract import
+    # print extracted text
+    print(f"Camera {cam_num} extracted text:")
+    print(text)
 
-# show what we found
-print("extracted text:")
-print(text)
-
-# save the text in a json file for later
-f = open(json_file, "w")      # open the file for writing
-json.dump({"textKey": text}, f)  # write the data to json library (.dump)
-f.close()                      # close the file
-
-print(f"[{timestamp}] text saved as {json_file}")
+    # save text to JSON
+    f = open(json_file, "w") # open the file for writing
+    json.dump({"textKey": text}, f) # write the data to json library (.dump)
+    f.close() # close the file
+    print(f"[{timestamp}] camera {cam_num} text saved as {json_file}")
