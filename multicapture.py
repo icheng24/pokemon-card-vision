@@ -34,7 +34,7 @@ def preprocess_image(img):
     return morph
 
 # loop over both cameras (front and back)
-for cam_num in [0, 1]:  # 0 = front, 1 = back
+for cam_num in [0, 1]: 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     raw_file = f"photo_cam{cam_num}_raw_{timestamp}.jpg"
     proc_file = f"photo_cam{cam_num}_proc_{timestamp}.jpg"
@@ -77,8 +77,22 @@ for cam_num in [0, 1]:  # 0 = front, 1 = back
     cv2.imwrite(proc_file, proc_img)
     print(f"[{timestamp}] Camera {cam_num} PROCESSED photo saved as {proc_file}")
 
-    # placeholder for modern AI OCR (replace with actual model later)
+    # placeholder for modern AI OCR - will attempt when i figure this out
     extracted_text = "<AI OCR placeholder>"
+
+    # attempt to "parse" text into JSON-like structure
+    try:
+        # simple split by lines and words
+        lines = extracted_text.splitlines()
+        text_json = {"lines": []}
+        for line in lines:
+            text_json["lines"].append({
+                "text": line,
+                "words": line.split()
+            })
+    except Exception as e: #if try block fail
+        #fallback 
+        text_json = {"error": str(e), "text": extracted_text}
 
     # save metadata
     data = {
@@ -87,7 +101,8 @@ for cam_num in [0, 1]:  # 0 = front, 1 = back
         "raw_image": raw_file,
         "processed_image": proc_file,
         "sharpness": float(sharpness_vals[best_idx]),
-        "ocr_text": extracted_text
+        "ocr_text": extracted_text,
+        "ocr_json": text_json
     }
     with open(json_file, "w") as f:
         json.dump(data, f, indent=2)
