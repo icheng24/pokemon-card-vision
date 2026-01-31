@@ -1,0 +1,50 @@
+READ ME
+
+Verified Raspberry Pi environment, OS, Python version, and libcamera installation.
+
+Confirmed SSH access to the Pi over a hotspot and remote control.
+
+Verified that two cameras were attached via libcamera logs.
+
+ran minimal test scripts to capture images from camera 0; photosare blurry.
+
+Attempted single-frame capture with Picamera2; output bad - blurry
+
+Increased capture delay to 2–5 seconds to allow exposure to stabilize; slight improvement in clarity.
+
+Saved images using unique timestamped filenames to avoid overwriting.
+
+Attempted OCR using pytesseract on initial captures; output was empty.
+
+Adjusted camera distance and angle to the card; negligible improvement.
+
+Tweaked lighting direction and intensity to reduce glare; OCR still failed.
+
+Experimented with manually adjusting camera focus through Picamera2 (if supported); minimal effect.
+
+Attempted capture from front and back cameras - stil blurry
+
+Captured multiple frames per camera and calculated sharpness via Laplacian variance (sharpness measure); successfully isolated the sharpest frame.
+
+Attempted cropping around the center of the image to focus on the card; minor improvement for preprocessing.
+
+Applied grayscale conversion using OpenCV to prepare for thresholding.
+
+Applied contrast enhancement (CLAHE) to improve visibility of text edges.
+
+Applied adaptive thresholding to further isolate text regions.
+
+Applied simple morphological operations (dilate) to thicken text lines; small improvement in clarity.
+
+Attempted pytesseract OCR on processed images; still failed to parse stylized Pokémon card text reliably. #this one is terrible
+
+Researched modern computer vision workflows; discovered classical OCR - will attempt
+
+should i use AI-assisted and LLM-based OCR ? - need to find a solution that DOESNT require internet though
+
+made sure Everyuthing was good on venv
+
+Captured 5 frames per camera per run; automatically selected the sharpest frame for processing.
+
+End-to-end script captures, processes, and outputs JSON metadata for both cameras successfully.
+
