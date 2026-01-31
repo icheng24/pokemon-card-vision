@@ -48,3 +48,13 @@ Captured 5 frames per camera per run; automatically selected the sharpest frame 
 
 End-to-end script captures, processes, and outputs JSON metadata for both cameras successfully.
 
+
+
+
+Attempted AI-assisted OCR using EasyOCR with detection and recognition models; models downloaded and initialized successfully.
+
+Ran recognize2.py on Pi with CPU-only fallback; -- VERY SLOW EXECUTION?
+
+minimal capture script (multicapture.py) continues to work good, capturing timestamped RAW and processed images with metadata.
+
+im unsure how to make ai-based OCR currently feasible on Pi without external GPU or offloading processing - it says "gpu unavaialble " eveyrtime
